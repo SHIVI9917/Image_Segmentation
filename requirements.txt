@@ -1,0 +1,19 @@
+# requirements.txt
+# Core dependencies for Mask2Former traffic image segmentation project
+#
+# torch/torchvision are pinned to the same CUDA 12.8 wheel versions verified working in
+# E:/Project_Repos/DeepLearningEnvironment (see its pyproject.toml/uv.lock). Install with:
+#   uv pip install -r requirements.txt
+# The --extra-index-url below is what supplies the +cu128 wheels; PyPI (uv/pip's default index)
+# supplies everything else. Requires Python >=3.11 (matches DeepLearningEnvironment's
+# .python-version) for wheel availability/compatibility.
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+torch==2.10.0+cu128
+torchvision==0.25.0+cu128
+transformers>=4.36.0
+Pillow>=10.0.0
+numpy>=2.4.0
+matplotlib>=3.8.0
+opencv-python>=4.9.0
+scikit-learn>=1.4.0

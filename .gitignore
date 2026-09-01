@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+data.pkl
+
+# Claude Code working docs -- local reference only, not shipped with the repo
+docs/
+
+# generated pipeline output (reproducible from data/raw/data.pkl and training)
+data/
+models/
+.venv/
