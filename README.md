@@ -1,8 +1,7 @@
 # ImageSegmentation (Mask2Former Traffic Image Segmentation)
 
 **Status: Modular pipeline functional and verified end-to-end (`src/`, `run_pipeline.sh`) — see
-[Results](#results) below. Trained weights are published on the Hugging Face Hub — see
-[Pretrained Weights](#pretrained-weights). The original notebook (`notebooks/Project.ipynb`)
+[Results](#results) below. The original notebook (`notebooks/Project.ipynb`)
 remains the reference implementation the modular pipeline was built to match. Known open gap: a
 handful of classes have no training examples in the current sampled dataset — see Results.**
 
@@ -67,31 +66,6 @@ The segmentation pipeline integrates:
 - Mask2Former as the primary model
 - Efficient data processing and inference pipelines to maximize segmentation accuracy and minimize computational overhead.
 
-## Pretrained Weights
-
-The finetuned model (20 epochs, best checkpoint) is published on the Hugging Face Hub:
-
-**[niksixus/Mask2Former-Traffic-Segmentation](https://huggingface.co/niksixus/Mask2Former-Traffic-Segmentation)**
-
-Use it directly without training anything yourself:
-
-```python
-from transformers import Mask2FormerForUniversalSegmentation, Mask2FormerImageProcessor
-
-model = Mask2FormerForUniversalSegmentation.from_pretrained(
-    "niksixus/Mask2Former-Traffic-Segmentation"
-)
-processor = Mask2FormerImageProcessor(
-    ignore_index=0, do_reduce_labels=False, do_resize=False, do_rescale=False, do_normalize=False,
-)
-```
-
-The non-default `Mask2FormerImageProcessor` settings matter — this model expects inputs already
-resized to 512×512 and normalized (ADE20K mean/std, see `src/config.py`'s `ADE_MEAN`/`ADE_STD`)
-upstream, matching how it was trained, rather than the processor's own default preprocessing.
-See the model card on the Hub page above for the full class list and the known-missing-classes
-caveat (also covered in Results below).
-
 ## Results
 
 Trained on an RTX 4090 (RunPod), using `facebook/mask2former-swin-large-ade-semantic` finetuned
@@ -147,16 +121,12 @@ ImageSegmentation/
 └── docs/                     # local reference docs (gitignored)
 ```
 
-`models/finetuned/` is exactly what gets published to the Hub — see [Pretrained Weights](#pretrained-weights).
 `data/raw/data.pkl` is fetched automatically by `run_pipeline.sh` from the Kaggle dataset linked
 above if not already present.
 
 ## How to Use
 
-1. **Just want the model? Use the published weights** — see [Pretrained Weights](#pretrained-weights)
-   above. No setup, training, or GPU needed beyond running inference.
-2. **Want to reproduce or extend training?** Run the modular pipeline on a Linux GPU box (e.g. a
-   RunPod pod):
+1. **Run the modular pipeline** on a Linux GPU box (e.g. a RunPod pod):
    ```bash
    ./run_pipeline.sh
    ```
@@ -168,11 +138,8 @@ above if not already present.
    python evaluate_model.py
    ```
    Results append automatically to `results/results.csv`; regenerate the plot with
-   `python -m src.plot_results`. To publish an updated model afterward:
-   ```bash
-   hf upload YOUR-USERNAME/YOUR-REPO-NAME models/finetuned .
-   ```
-3. **Notebook** — `notebooks/Project.ipynb` remains available as the original reference
+   `python -m src.plot_results`.
+2. **Notebook** — `notebooks/Project.ipynb` remains available as the original reference
    implementation and is still the place to look for the raw dataset curation logic (subdirectory
    scoring, color-segmentation-to-label conversion), which has no equivalent in `src/`.
 
